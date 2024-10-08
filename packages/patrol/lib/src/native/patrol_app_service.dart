@@ -156,6 +156,7 @@ class PatrolAppService extends PatrolAppServiceServer {
     final patrolBinding =
         PatrolBinding.ensureInitialized(const NativeAutomatorConfig());
 
+    final previousOnError = FlutterError.onError;
     FlutterError.onError = (details) {
       final previousDetails =
           switch (patrolBinding.testResults[request.name] as Failure?) {
@@ -169,6 +170,7 @@ class PatrolAppService extends PatrolAppServiceServer {
       );
     };
     final testExecutionResult = await testExecutionCompleted;
+    FlutterError.onError = previousOnError;
 
     return RunDartTestResponse(
       result: testExecutionResult.passed
